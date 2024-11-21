@@ -1,0 +1,105 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+#define LENGTH 1000
+
+int evalExpr(char *expr, int *error) {
+    int vals[LENGTH];
+    char ops[LENGTH];
+    int valIdx = -1, opIdx = -1;
+
+    int preced(char op) {
+        if (op == '+' || op == '-') return 1;
+        if (op == '*' || op == '/') return 2;
+        return 0;
+    }
+
+    int calc(int a, int b, char op) {
+        if (op == '+') return a + b;
+        if (op == '-') return a - b;
+        if (op == '*') return a * b;
+        if (op == '/') {
+            if (b == 0) {
+                *error = 2;
+                return 0;
+            }
+            return a / b;
+        }
+        return 0;
+    }
+
+    void applyOp() {
+        if (valIdx < 1 || opIdx < 0) {
+            *error = 1;
+            return;
+        }
+        int b = vals[valIdx--];
+        int a = vals[valIdx--];
+        char op = ops[opIdx--];
+        vals[++valIdx] = calc(a, b, op);
+    }
+
+    for (int i = 0; expr[i] != '\0'; i++) {
+        char currentChar = expr[i];
+
+        if (isspace(currentChar)) continue;
+
+        if (isdigit(currentChar)) {
+            int num = 0;
+            while (isdigit(expr[i])) {
+                num = num * 10 + (expr[i] - '0');
+                i++;
+            }
+            i--;
+            vals[++valIdx] = num;
+        }
+        else if (currentChar == '+' || currentChar == '-' || currentChar == '*' || currentChar == '/') {
+            while (opIdx >= 0 && preced(ops[opIdx]) >= preced(currentChar)) {
+                applyOp();
+                if (*error) return 0;
+            }
+            ops[++opIdx] = currentChar;
+        }
+        else {
+            *error = 1;
+            return 0;
+        }
+    }
+
+    while (opIdx >= 0) {
+        applyOp();
+        if (*error) return 0;
+    }
+
+    if (valIdx != 0) {
+        *error = 1;
+        return 0;
+    }
+    return vals[valIdx];
+}
+
+int main() {
+    char expression[LENGTH];
+    printf("Enter a mathematical expression: ");
+    fgets(expression, LENGTH, stdin);
+
+    size_t len = strlen(expression);
+    if (len > 0 && expression[len - 1] == '\n') {
+        expression[len - 1] = '\0';
+    }
+
+    int error = 0;
+    int result = evalExpr(expression, &error);
+
+    if (error == 1) {
+        printf("Error: Invalid expression.\n");
+    } else if (error == 2) {
+        printf("Error: Division by zero.\n");
+    } else {
+        printf("Result: %d\n", result);
+    }
+
+    return 0;
+}
