@@ -5,7 +5,7 @@ char filename[] = "output.txt";
   void create(){ 
    FILE *fptr;
    fptr =  fopen(filename,"a");
-   if(fptr==NULL){
+   if(fptr==NULL){ 
       printf("Error cr\n");
       return;
    }
