@@ -1,160 +1,150 @@
+#include<stdio.h>
+#include<stdlib.h>
+char filename[] = "output.txt";
+ 
+  void create(){ 
+   FILE *fptr;
+   fptr =  fopen(filename,"a");
+   if(fptr==NULL){
+      printf("Error cr\n");
+      return;
+   }
+   fclose(fptr);
+  }
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#define FILENAME "users.txt"
-
-typedef struct {
-    int id;
-    char name[30];
-    int age;
-} User;
-
-void createFile() {
-    FILE *fp = fopen(FILENAME, "a");
-    if (fp == NULL) {
-        printf("Error creating file!\n");
-        exit(1);
-    }
-    fclose(fp);
+  void display(){
+   FILE *fptr;
+   fptr = fopen(filename,"r");
+   if(fptr==NULL){
+      printf("Error dp\n");
+      return;
+   }
+   char ch[100];
+   int age , user;
+   while(fscanf(fptr,"%s %d %d",ch,&age,&user) != EOF){
+      printf("%s ",ch);
+      printf("%d ",age);
+      printf("%d ",user);
+      printf("\n");
+   }
+   fclose(fptr);
+  }
+void add (){
+   FILE *fptr;
+   fptr = fopen(filename , "a");
+   if(fptr==NULL){
+      printf("Error ap\n");
+      exit(1);
+   }
+   char ch[100];
+   int age , user;
+   printf("Enter name :");
+   scanf("%s",ch);
+   printf("Enter age :");
+   scanf("%d",&age);
+   printf("Enter user :");
+   scanf("%d",&user);
+   fprintf(fptr , "%s %d %d \t",ch,age ,user);
+   fclose(fptr);
 }
 
-void addUser() {
-    User u;
-    printf("Enter ID: ");
-    scanf("%d", &u.id);
-    printf("Enter Name: ");
-    scanf("%s", u.name);
-    printf("Enter Age: ");
-    scanf("%d", &u.age);
+void update(){
+   FILE *fptr , *fpt;
+   fptr = fopen(filename , "r");
+   if(fptr==NULL){
+      printf("Error up\n");
+      return;
+   }
+   char ch[100][100];
+   int age[100] , user[100];
+   int i=0;
+//    fpt = fopen("temp.txt" , "w");
+   int find;
+   int check=0;
+   printf("enter user id to find : ");
+   scanf("%d",&find);
+   while(fscanf(fptr,"%s %d %d",ch[i],&age[i],&user[i])!=EOF){
+      if(user[i]==find){
+         printf("Enter name :");
+         scanf("%s",ch[i]);
+         printf("Enter age :");
+         scanf("%d",&age[i]);
+         user[i] = find;
+         check=1;
+      }
+    //   fprintf(fpt,"%s %d %d \t",ch,age,user);
+      i++;
+   }
+   fclose(fptr);
+    if(check==0){
+      printf("No such user found\n");
+   }
+    fpt = fopen(filename , "w");
+   for(int j=0;j<i;j++){
+      fprintf(fpt,"%s %d %d \t",ch[j],age[j],user[j]);
+   }
+   fclose(fpt);
+} 
 
-    FILE *fp = fopen(FILENAME, "a");
-    if (fp == NULL) {
-        printf("Error opening file!\n");
-        return;
-    }
-    fprintf(fp, "%d %s %d\n", u.id, u.name, u.age);
-    fclose(fp);
-    printf("User added successfully!\n");
-}
+void delete(){
+   FILE *fptr , *fpt;
+   fptr = fopen(filename , "r");
+   if(fptr==NULL){
+      printf("Error del\n");
+      return;
+   }
+   char ch[100][100];
+   int age[100] , user[100];
+   int i=0;
+   int find;
+   int check=0;
+   printf("enter user id to find : ");
+   scanf("%d",&find);
+   while(fscanf(fptr,"%s %d %d",ch[i],&age[i],&user[i])!=EOF){
+      if(user[i]==find){
+        check=1;
+        continue;
+      }
+    //   fprintf(fpt,"%s %d %d \t",ch,age,user);
+      i++;
+   }
+   fclose(fptr);
+    if(check==0){
+      printf("No such user found\n");
+   }
+    fpt = fopen(filename , "w");
+   for(int j=0;j<i;j++){
+      fprintf(fpt,"%s %d %d \t",ch[j],age[j],user[j]);
+   }
+   fclose(fpt);
+} 
 
-void showUsers() {
-    FILE *fp = fopen(FILENAME, "r");
-    if (fp == NULL) {
-        printf("No users found!\n");
-        return;
-    }
+ int main(){
+   //  printf("Hello");
+   // FILE *fptr;
+   create();
+   int b=1,c;
+   printf("1 for create \n 2 for add data \n 3 for update data \n 4 for delete data \n 5 for display all data\n 6 for exit \n" );
+   while(b){
+      printf("\nEnter choice : ");
+      scanf("%d",&c);
+      switch (c)
+      {
+      case 1: create();
+         break;
+      case 2: add();
+         break;
+      case 3: update();
+         break;
+      case 4: delete();
+         break;
+      case 5: display();
+         break;         
+      case 6: b=0; break;
+      default: printf("Wrong choice\n");
+      }
+   }
+   return 0;
 
-    User u;
-    printf("\nID\tName\tAge\n");
-    while (fscanf(fp, "%d %s %d", &u.id, u.name, &u.age) != EOF) {
-        printf("%d\t%s\t%d\n", u.id, u.name, u.age);
-    }
-    fclose(fp);
-}
-
-void updateUser() {
-    int uid, found = 0;
-    printf("Enter ID to update: ");
-    scanf("%d", &uid);
-
-    FILE *fp = fopen(FILENAME, "r");
-    if (fp == NULL) {
-        printf("No users found!\n");
-        return;
-    }
-
-    FILE *temp = fopen("temp.txt", "w");
-    if (temp == NULL) {
-        printf("Error creating temp file!\n");
-        fclose(fp);
-        return;
-    }
-
-    User u;
-    while (fscanf(fp, "%d %s %d", &u.id, u.name, &u.age) != EOF) {
-        if (u.id == uid) {
-            found = 1;
-            printf("Enter new Name: ");
-            scanf("%s", u.name);
-            printf("Enter new Age: ");
-            scanf("%d", &u.age);
-        }
-        fprintf(temp, "%d %s %d\n", u.id, u.name, u.age);
-    }
-
-    fclose(fp);
-    fclose(temp);
-
-    if (found) {
-        remove(FILENAME);
-        rename("temp.txt", FILENAME);
-        printf("User updated successfully!\n");
-    } else {
-        remove("temp.txt");
-        printf("User not found!\n");
-    }
-}
-
-void deleteUser() {
-    int uid, found = 0;
-    printf("Enter ID to delete: ");
-    scanf("%d", &uid);
-
-    FILE *fp = fopen(FILENAME, "r");
-    if (fp == NULL) {
-        printf("No users found!\n");
-        return;
-    }
-
-    FILE *temp = fopen("temp.txt", "w");
-    if (temp == NULL) {
-        printf("Error creating temp file!\n");
-        fclose(fp);
-        return;
-    }
-
-    User u;
-    while (fscanf(fp, "%d %s %d", &u.id, u.name, &u.age) != EOF) {
-        if (u.id == uid) {
-            found = 1;
-            continue;
-        }
-        fprintf(temp, "%d %s %d\n", u.id, u.name, u.age);
-    }
-
-    fclose(fp);
-    fclose(temp);
-
-    if (found) {
-        remove(FILENAME);
-        rename("temp.txt", FILENAME);
-        printf("User deleted successfully!\n");
-    } else {
-        remove("temp.txt");
-        printf("User not found!\n");
-    }
-}
-
-int main() {
-    int choice;
-    createFile();
-
-    do {
-        printf("\n1. Add User\n2. Show Users\n3. Update User\n4. Delete User\n5. Exit\n");
-        printf("Enter choice: ");
-        scanf("%d", &choice);
-
-        switch (choice) {
-            case 1: addUser(); break;
-            case 2: showUsers(); break;
-            case 3: updateUser(); break;
-            case 4: deleteUser(); break;
-            case 5: printf("Exiting...\n"); break;
-            default: printf("Invalid choice!\n");
-        }
-    } while (choice != 5);
-
-    return 0;
-}
+ }
+ 
