@@ -34,7 +34,7 @@ void add (){
    fptr = fopen(filename , "a");
    if(fptr==NULL){
       printf("Error ap\n");
-      exit(1);
+      return;
    }
    char ch[100];
    int age , user;
