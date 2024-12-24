@@ -1,11 +1,16 @@
 #include<stdio.h>
-#include<stdlib.h>
 char filename[] = "output.txt";
  
+struct data{
+    char name[30];
+    int age;
+    int id;
+};
+
   void create(){ 
    FILE *fptr;
    fptr =  fopen(filename,"a");
-   if(fptr==NULL){ 
+   if(fptr==NULL){
       printf("Error cr\n");
       return;
    }
@@ -19,12 +24,11 @@ char filename[] = "output.txt";
       printf("Error dp\n");
       return;
    }
-   char ch[100];
-   int age , user;
-   while(fscanf(fptr,"%s %d %d",ch,&age,&user) != EOF){
-      printf("%s ",ch);
-      printf("%d ",age);
-      printf("%d ",user);
+   struct data d;
+   while(fscanf(fptr,"%s %d %d",d.name,&d.age,&d.id) != EOF){
+      printf("%s ",d.name);
+      printf("%d ",d.age);
+      printf("%d ",d.id);
       printf("\n");
    }
    fclose(fptr);
@@ -36,15 +40,14 @@ void add (){
       printf("Error ap\n");
       return;
    }
-   char ch[100];
-   int age , user;
+   struct data d;
    printf("Enter name :");
-   scanf("%s",ch);
+   scanf("%s",d.name);
    printf("Enter age :");
-   scanf("%d",&age);
+   scanf("%d",&d.age);
    printf("Enter user :");
-   scanf("%d",&user);
-   fprintf(fptr , "%s %d %d \t",ch,age ,user);
+   scanf("%d",&d.id);
+   fprintf(fptr , "%s %d %d \t",d.name,d.age ,d.id);
    fclose(fptr);
 }
 
@@ -55,21 +58,19 @@ void update(){
       printf("Error up\n");
       return;
    }
-   char ch[100][100];
-   int age[100] , user[100];
+   struct data d[100];
    int i=0;
-//    fpt = fopen("temp.txt" , "w");
    int find;
    int check=0;
    printf("enter user id to find : ");
    scanf("%d",&find);
-   while(fscanf(fptr,"%s %d %d",ch[i],&age[i],&user[i])!=EOF){
-      if(user[i]==find){
+   while(fscanf(fptr,"%s %d %d",d[i].name,&d[i].age,&d[i].id)!=EOF){
+      if(d[i].id==find){
          printf("Enter name :");
-         scanf("%s",ch[i]);
+         scanf("%s",d[i].name);
          printf("Enter age :");
-         scanf("%d",&age[i]);
-         user[i] = find;
+         scanf("%d",&d[i].age);
+         d[i].id = find;
          check=1;
       }
     //   fprintf(fpt,"%s %d %d \t",ch,age,user);
@@ -79,9 +80,9 @@ void update(){
     if(check==0){
       printf("No such user found\n");
    }
-    fpt = fopen(filename , "w");
+   fpt = fopen(filename , "w");
    for(int j=0;j<i;j++){
-      fprintf(fpt,"%s %d %d \t",ch[j],age[j],user[j]);
+      fprintf(fpt,"%s %d %d \t",d[j].name,d[j].age,d[j].id);
    }
    fclose(fpt);
 } 
@@ -93,15 +94,14 @@ void delete(){
       printf("Error del\n");
       return;
    }
-   char ch[100][100];
-   int age[100] , user[100];
+   struct data d[100];
    int i=0;
    int find;
    int check=0;
    printf("enter user id to find : ");
    scanf("%d",&find);
-   while(fscanf(fptr,"%s %d %d",ch[i],&age[i],&user[i])!=EOF){
-      if(user[i]==find){
+   while(fscanf(fptr,"%s %d %d",d[i].name,&d[i].age,&d[i].id)!=EOF){
+      if(d[i].id==find){
         check=1;
         continue;
       }
@@ -112,17 +112,14 @@ void delete(){
     if(check==0){
       printf("No such user found\n");
    }
-    fpt = fopen(filename , "w");
+   fpt = fopen(filename , "w");
    for(int j=0;j<i;j++){
-      fprintf(fpt,"%s %d %d \t",ch[j],age[j],user[j]);
+      fprintf(fpt,"%s %d %d \t",d[j].name,d[j].age,d[j].id);
    }
    fclose(fpt);
 } 
 
  int main(){
-   //  printf("Hello");
-   // FILE *fptr;
-   create();
    int b=1,c;
    printf("1 for create \n 2 for add data \n 3 for update data \n 4 for delete data \n 5 for display all data\n 6 for exit \n" );
    while(b){
