@@ -4,7 +4,8 @@ long long calculate(long long base, long long exp , long long mod){
     base = base % mod;
     while(exp>0){
         if(exp%2==1){
-            result = (result*base)%mod;
+            result *= (base)%mod;
+            exp-=1;
         }
         exp = exp/2;
         base = (base * base)% mod;
