@@ -2,13 +2,13 @@
 long long calculate(long long base, long long exp , long long mod){
     long long result=1;
     base = base % mod;
-    while(exp>0){
-        if(exp%2==1){
-            result *= (base)%mod;
-            exp-=1;
-        }
+    if(exp%2==1){                            
+        result = (base)%mod;
+        exp-=1;
+    }
+    while(exp>0){                            
         exp = exp/2;
-        base = (base * base)% mod;
+        result = (result*(base * base)% mod)%mod;
     }
     return result;
 }
