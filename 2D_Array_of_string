@@ -25,7 +25,7 @@ int main()
             current_length = strlen(array[index1][index2]);
             printf("%s ", array[index1][index2]);
 
-            if (array[index1][index2][0] == 'a' || array[index1][index2][0] == 'e' || array[index1][index2][0] == 'i' || array[index1][index2][0] == 'o' || array[index1][index2][0] == 'u')
+            if (array[index1][index2][0] == 'a' || array[index1][index2][0] == 'e' || array[index1][index2][0] == 'i' || array[index1][index2][0] == 'o' || array[index1][index2][0] == 'u' || array[index1][index2][0] == 'A' || array[index1][index2][0] == 'E' || array[index1][index2][0] == 'I' || array[index1][index2][0] == 'O' || array[index1][index2][0] == 'U')
             {
                 vowel_count++;
             }
