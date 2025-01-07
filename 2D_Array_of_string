@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <string.h>
+int main()
+{
+    int row, column;
+    scanf("%d", &row);
+    scanf("%d", &column);
+    int vowel_count = 0;
+    char array[row][column][50];
+    char longest_word[50];
+    int maximum_length = 0, current_length = 0;
+    for (int index1 = 0; index1 < row; index1++)
+    {
+        for (int index2 = 0; index2 < column; index2++)
+        {
+            char str[50];
+            scanf("%s", str);
+            strcpy(array[index1][index2], str);
+        }
+    }
+    for (int index1 = 0; index1 < row; index1++)
+    {
+        for (int index2 = 0; index2 < column; index2++)
+        {
+            current_length = strlen(array[index1][index2]);
+            printf("%s ", array[index1][index2]);
+
+            if (array[index1][index2][0] == 'a' || array[index1][index2][0] == 'e' || array[index1][index2][0] == 'i' || array[index1][index2][0] == 'o' || array[index1][index2][0] == 'u')
+            {
+                vowel_count++;
+            }
+            if (current_length > maximum_length)
+            {
+                maximum_length = current_length;
+                strcpy(longest_word, array[index1][index2]);
+            }
+        }
+        printf("\n");
+    }
+    printf("\n");
+    printf("Number of words starting with a vowel: %d\n", vowel_count);
+    printf("Longest word: %s\n", longest_word);
+    return 0;
+}
