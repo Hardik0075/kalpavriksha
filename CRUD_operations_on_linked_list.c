@@ -1,285 +1,247 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct node
+typedef struct Node
 {
     int data;
-    struct node *next;
-} node;
+    struct Node *next;
+} Node;
 
-node *head = NULL;
-void insertatstart(int number)
+Node *create_node(int data)
 {
-
-    if (head == NULL)
+    Node *new_node = (Node *)malloc(sizeof(Node));
+    if (!new_node)
     {
-        head = (node *)malloc(sizeof(node));
-        head->data = number;
-        head->next = NULL;
+        printf("Memory allocation failed.\n");
+        return NULL;
+    }
+    new_node->data = data;
+    new_node->next = NULL;
+    return new_node;
+}
+
+void insert_node(Node **head, int data, int position)
+{
+    Node *new_node = create_node(data);
+    if (new_node == NULL)
+    {
         return;
     }
-    else
-    {
-        node *newnode = (node *)malloc(sizeof(node));
-        newnode->data = number;
-        newnode->next = head;
-        head = newnode;
-    }
-    // 	return newnode;
-    return;
-}
 
-void insertatPostition(int number, int position)
-{
-    node *newnode = (node *)malloc(sizeof(node));
-    newnode->data = number;
-    newnode->next = NULL;
-    int i = 1;
-    node *temp = head;
-    while (i != position - 1 && temp->next != NULL)
+    if (position == 1 || *head == NULL)
     {
-        i++;
-        temp = temp->next;
-    }
-    if (i == position - 1)
-    {
-        newnode->next = temp->next;
-        temp->next = newnode;
-    }
-    else
-    {
-        printf("Invalid Location \n");
-    }
-    return;
-}
-
-void insertatend(int number)
-{
-    node *newnode = (node *)malloc(sizeof(node));
-    newnode->data = number;
-    newnode->next = NULL;
-    if (head == NULL)
-    {
-        head = newnode;
+        new_node->next = *head;
+        *head = new_node;
         return;
     }
-    node *temp = head;
-    while (temp->next != NULL)
-    {
-        temp = temp->next;
-    }
-    temp->next = newnode;
-    // 	return;
-}
 
-void display()
-{
-    if (head == NULL)
+    Node *current = *head;
+    int current_position = 1;
+    while (current != NULL && current_position < position - 1)
     {
-        printf("Empty List\n");
+        current = current->next;
+        current_position++;
+    }
+
+    if (current == NULL)
+    {
+        printf("Invalid position\n");
+        free(new_node);
         return;
     }
-    node *temp = head;
-    while (temp->next != NULL)
-    {
-        printf("%d->", temp->data);
-        temp = temp->next;
-    }
-    printf("%d", temp->data);
-    printf("\n");
+
+    new_node->next = current->next;
+    current->next = new_node;
 }
 
-void updateatstart(node *head, int num)
+void delete_node(Node **head, int position)
 {
-    if (head == NULL)
+    if (*head == NULL)
     {
-        head = (node *)malloc(sizeof(node));
-        head->data = num;
-        head->next = NULL;
+        printf("Linked list is empty.\n");
+        return;
     }
-    head->data = num;
-    return;
-}
 
-void updateatPostition(int num, int position)
-{
+    Node *temp;
     if (position == 1)
     {
-        updateatstart(head, num);
+        temp = *head;
+        *head = (*head)->next;
+        free(temp);
         return;
     }
-    int i = 1;
-    node *temp = head;
-    while (i != position && temp->next != NULL)
+
+    Node *current = *head;
+    int current_position = 1;
+    while (current != NULL && current_position < position - 1)
     {
-        i++;
-        temp = temp->next;
+        current = current->next;
+        current_position++;
     }
-    if (i == position)
+
+    if (current == NULL || current->next == NULL)
     {
-        temp->data = num;
+        printf("Invalid position.\n");
+        return;
     }
-    else
-    {
-        printf("Invalid Location \n");
-    }
+
+    temp = current->next;
+    current->next = temp->next;
+    free(temp);
 }
 
-void updateatend(int num)
+void update_node(Node *head, int position, int new_data)
 {
-    node *temp = head;
-    while (temp->next != NULL)
+    if (position <= 0)
     {
-        temp = temp->next;
+        printf("Invalid position\n");
+        return;
     }
-    temp->data = num;
-    return;
+
+    if (head == NULL)
+    {
+        printf("Linked list is empty.\n");
+        return;
+    }
+
+    Node *current = head;
+    int current_position = 1;
+    while (current != NULL && current_position < position)
+    {
+        current = current->next;
+        current_position++;
+    }
+
+    if (current == NULL)
+    {
+        printf("Invalid position.\n");
+        return;
+    }
+
+    current->data = new_data;
 }
 
-void deleteatstart()
+void display_list(Node *head)
 {
     if (head == NULL)
     {
-        printf("Empty list\n");
+        printf("Linked list is empty.\n");
         return;
     }
-    head = head->next;
-    return;
-}
 
-void deleteatPostition(int position)
-{
-    if (position == 1)
-    {
-        deleteatstart(head);
-        return;
-    }
-    int i = 1;
-    node *temp = head;
-    while (i != position - 1 && temp->next != NULL)
-    {
-        i++;
-        temp = temp->next;
-    }
-    if (i == position - 1)
-    {
-        temp->next = temp->next->next;
-        // temp->next= newnode;
-    }
-    else
-    {
-        printf("Invalid Location \n");
-    }
-    return;
-}
-
-void deleteatend()
-{
-    if (head == NULL)
-    {
-        printf("Empty List\n");
-        return;
-    }
-    node *temp = head;
-    while (temp->next->next != NULL)
-    {
-        temp = temp->next;
-    }
-    temp->next = NULL;
-    return;
-}
-
-void freeList()
-{
-    node *tmp;
-
+    printf("The Linked List is: ");
     while (head != NULL)
     {
-        tmp = head;
+        printf("%d -> ", head->data);
         head = head->next;
-        free(tmp);
     }
+    printf("NULL\n");
+}
+
+void free_list(Node **head)
+{
+    Node *current = *head;
+    Node *next_node;
+    while (current != NULL)
+    {
+        next_node = current->next;
+        free(current);
+        current = next_node;
+    }
+    *head = NULL;
 }
 
 int main()
 {
-    int operations;
-    printf("Insert NUmber of Opeartion : ");
-    scanf("%d", &operations);
-    node *head = NULL;
-    while (operations--)
+    Node *head = NULL;
+    int number_of_operations;
+
+    printf("Enter the number of operations you want to perform: ");
+    scanf("%d", &number_of_operations);
+    if (number_of_operations < 1 || number_of_operations > 100)
+    {
+        printf("Invalid input for the number of operations. It must be between 1 and 100.\n");
+        return 0;
+    }
+
+    for (int iterator = 0; iterator < number_of_operations; iterator++)
     {
         int choice;
-        printf("Insert Choice : ");
+        printf("\n1. Insert at beginning\n2. Insert at position\n3. Insert at end\n4. Display\n5. Update at position\n6. Delete at start\n7. Delete at position\n8. Delete at end\n");
+        printf("\nEnter a choice: ");
         scanf("%d", &choice);
+
         if (choice == 1)
         {
-            printf("Enter Number to insert at end : ");
-            int x;
-            scanf("%d", &x);
-            // 			if(head==NULL) {
-            // 				insertatstart(x);
-            // 			}
-            // 			else
-            insertatend(x);
+            int data;
+            printf("\nEnter the data to be inserted at the beginning: ");
+            scanf("%d", &data);
+            insert_node(&head, data, 1);
         }
         else if (choice == 2)
         {
-            printf("Enter Number to insert at Beginning : ");
-            int x;
-            scanf("%d", &x);
-            insertatstart(x);
+            int position, data;
+            printf("\nEnter the data to be inserted: ");
+            scanf("%d", &data);
+            printf("\nEnter the position: ");
+            scanf("%d", &position);
+            insert_node(&head, data, position);
         }
         else if (choice == 3)
         {
-            printf("Enter position to insert at : ");
-            int position;
-            scanf("%d", &position);
-            printf("Enter Number to insert at a position : ");
-            int x;
-            scanf("%d", &x);
-            if (position == 1)
+            int data;
+            printf("\nEnter the data to be inserted at the end: ");
+            scanf("%d", &data);
+            int position = 1;
+            Node *current = head;
+            while (current != NULL)
             {
-                insertatstart(x);
+                position++;
+                current = current->next;
             }
-            else
-                insertatPostition(x, position); // or if n==1 ..call insert at start
+            insert_node(&head, data, position);
         }
         else if (choice == 4)
         {
-            printf("Linked lIst looks like : \n");
-            display();
+            display_list(head);
         }
         else if (choice == 5)
         {
-            printf("insert position to update at : ");
-            int position;
+            int position, new_data;
+            printf("\nEnter the position to be updated: ");
             scanf("%d", &position);
-            printf("insert number to update : ");
-            int x;
-            scanf("%d", &x);
-            updateatPostition(x, position);
+            printf("\nEnter the new data: ");
+            scanf("%d", &new_data);
+            update_node(head, position, new_data);
         }
         else if (choice == 6)
         {
-            deleteatstart();
+            delete_node(&head, 1);
         }
         else if (choice == 7)
         {
-            deleteatend();
+            int position;
+            printf("\nEnter the position to delete: ");
+            scanf("%d", &position);
+            delete_node(&head, position);
         }
         else if (choice == 8)
         {
-            printf("Enter position delete : ");
-            int position;
-            scanf("%d", &position);
-            deleteatPostition(position);
+            int position = 0;
+            Node *current = head;
+            while (current != NULL)
+            {
+                position++;
+                current = current->next;
+            }
+            delete_node(&head, position);
         }
         else
         {
-            printf("Invalid Input");
+            printf("Invalid Selection. Please select between 1 to 8.\n");
         }
     }
-    freeList();
+
+    free_list(&head);
     return 0;
 }
