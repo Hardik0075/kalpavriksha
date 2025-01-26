@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct Node
+typedef struct node
 {
     int data;
-    struct Node *next;
-} Node;
+    struct node *next;
+} node;
 
-Node *create_node(int data)
+node *create_node(int data)
 {
-    Node *new_node = (Node *)malloc(sizeof(Node));
+    node *new_node = (node *)malloc(sizeof(node));
     if (!new_node)
     {
         printf("Memory allocation failed.\n");
@@ -20,14 +20,22 @@ Node *create_node(int data)
     return new_node;
 }
 
-void insert_node(Node **head, int data, int position)
+void insert_node(node **head, int data, int position)
 {
-    Node *new_node = create_node(data);
-    if (new_node == NULL)
+    if (position <= 0)
     {
+        printf("Invalid position. Position must be greater than 0.\n");
         return;
     }
 
+    node *new_node = create_node(data);
+    if (!new_node)
+        return;
+    if (position > 1 && *head == NULL)
+    {
+        printf("Invalid Location");
+        return;
+    }
     if (position == 1 || *head == NULL)
     {
         new_node->next = *head;
@@ -35,17 +43,16 @@ void insert_node(Node **head, int data, int position)
         return;
     }
 
-    Node *current = *head;
-    int current_position = 1;
-    while (current != NULL && current_position < position - 1)
+    node *current = *head;
+    while (position > 2 && current != NULL)
     {
         current = current->next;
-        current_position++;
+        position--;
     }
 
     if (current == NULL)
     {
-        printf("Invalid position\n");
+        printf("Invalid position.\n");
         free(new_node);
         return;
     }
@@ -54,15 +61,21 @@ void insert_node(Node **head, int data, int position)
     current->next = new_node;
 }
 
-void delete_node(Node **head, int position)
+void delete_node(node **head, int position)
 {
+    if (position <= 0)
+    {
+        printf("Invalid position. Position must be greater than 0.\n");
+        return;
+    }
+
     if (*head == NULL)
     {
         printf("Linked list is empty.\n");
         return;
     }
 
-    Node *temp;
+    node *temp;
     if (position == 1)
     {
         temp = *head;
@@ -71,12 +84,11 @@ void delete_node(Node **head, int position)
         return;
     }
 
-    Node *current = *head;
-    int current_position = 1;
-    while (current != NULL && current_position < position - 1)
+    node *current = *head;
+    while (position > 2 && current != NULL)
     {
         current = current->next;
-        current_position++;
+        position--;
     }
 
     if (current == NULL || current->next == NULL)
@@ -90,11 +102,11 @@ void delete_node(Node **head, int position)
     free(temp);
 }
 
-void update_node(Node *head, int position, int new_data)
+void update_node(node *head, int position, int new_data)
 {
     if (position <= 0)
     {
-        printf("Invalid position\n");
+        printf("Invalid position. Position must be greater than 0.\n");
         return;
     }
 
@@ -104,12 +116,11 @@ void update_node(Node *head, int position, int new_data)
         return;
     }
 
-    Node *current = head;
-    int current_position = 1;
-    while (current != NULL && current_position < position)
+    node *current = head;
+    while (position > 1 && current != NULL)
     {
         current = current->next;
-        current_position++;
+        position--;
     }
 
     if (current == NULL)
@@ -121,7 +132,7 @@ void update_node(Node *head, int position, int new_data)
     current->data = new_data;
 }
 
-void display_list(Node *head)
+void display_list(node *head)
 {
     if (head == NULL)
     {
@@ -138,10 +149,10 @@ void display_list(Node *head)
     printf("NULL\n");
 }
 
-void free_list(Node **head)
+void free_list(node **head)
 {
-    Node *current = *head;
-    Node *next_node;
+    node *current = *head;
+    node *next_node;
     while (current != NULL)
     {
         next_node = current->next;
@@ -153,18 +164,18 @@ void free_list(Node **head)
 
 int main()
 {
-    Node *head = NULL;
+    node *head = NULL;
     int number_of_operations;
 
     printf("Enter the number of operations you want to perform: ");
     scanf("%d", &number_of_operations);
-    if (number_of_operations < 1 || number_of_operations > 100)
+    if (!(number_of_operations >= 1 && number_of_operations <= 100))
     {
-        printf("Invalid input for the number of operations. It must be between 1 and 100.\n");
+        printf("Invalid input for the number of operations.\n");
         return 0;
     }
 
-    for (int iterator = 0; iterator < number_of_operations; iterator++)
+    for (int i = 0; i < number_of_operations; i++)
     {
         int choice;
         printf("\n1. Insert at beginning\n2. Insert at position\n3. Insert at end\n4. Display\n5. Update at position\n6. Delete at start\n7. Delete at position\n8. Delete at end\n");
@@ -193,7 +204,7 @@ int main()
             printf("\nEnter the data to be inserted at the end: ");
             scanf("%d", &data);
             int position = 1;
-            Node *current = head;
+            node *current = head;
             while (current != NULL)
             {
                 position++;
@@ -228,7 +239,7 @@ int main()
         else if (choice == 8)
         {
             int position = 0;
-            Node *current = head;
+            node *current = head;
             while (current != NULL)
             {
                 position++;
@@ -238,7 +249,7 @@ int main()
         }
         else
         {
-            printf("Invalid Selection. Please select between 1 to 8.\n");
+            printf("Invalid selection. Please select between 1 to 8.\n");
         }
     }
 
