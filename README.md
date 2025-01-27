@@ -32,5 +32,13 @@ Output:
 Sorted linked list:
 OrderID: 102, DeliveryTime: 2 -> OrderID: 104, DeliveryTime: 3 -> OrderID: 101, DeliveryTime: 5 -> OrderID: 103, DeliveryTime: 8 -> NULL
 
-Time Complexity : O(n^2)
-Space Complexity : O(n)
+Time Complexity :
+
+1. Create_node() : O(1)
+2. free_linked_list() : O(n) , where n is number of nodes in list
+3. add_order() : O(n) , where n is number of nodex in the list.
+4. display_orders() : O(n) , where traverse each node (total n nodes).
+5. bubble_sort_orders() : O(n^2) , where n is number of nodes.
+6. Overall : O(n^2).
+
+Space Complexity : O(n) as there are n nodes with O(1) space each and temporary variables in the function calls use O(1) space.
