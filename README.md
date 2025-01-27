@@ -1,5 +1,5 @@
-Sorting Tasks by Deadline and Priority: 
-You are developing a task management system to help employees sort their tasks for a project. 
+Sorting Tasks by Deadline and Priority:
+You are developing a task management system to help employees sort their tasks for a project.
 
 Each task has the following attributes:
 Task ID (unique integer)
@@ -9,8 +9,8 @@ Duration (integer, representing the estimated number of days required to complet
 
 You need to sort a list of tasks using the Selection Sort algorithm based on the following conditions:
 Primary Sort Key: Deadline (ascending order: tasks that need to be completed sooner should come first).
-Secondary Sort Key (Tie-breaker): Priority (descending order: tasks with higher priority should be considered first in case of the same deadline).
-Tertiary Sort Key (Tie-breaker): Duration (ascending order: for tasks with the same deadline and priority, tasks that require fewer days to complete should come first).
+Secondary Sort Key (Tie): Priority (descending order: tasks with higher priority should be considered first in case of the same deadline).
+Tertiary Sort Key (Tie): Duration (ascending order: for tasks with the same deadline and priority, tasks that require fewer days to complete should come first).
 
 Problem Requirements:
 Implement the Selection Sort algorithm to sort the tasks in-place within a linked list.
@@ -38,12 +38,11 @@ Duration
 Output:
 Sorted linked list based on all three conditions.
 
-
 Constraints:
 1 ≤ n ≤ 100,000 (the number of tasks).
 0 ≤ deadline ≤ 100 (task's deadline).
 0 ≤ priority ≤ 10 (task's priority).
 1 ≤ duration ≤ 100 (task's duration).
 
-Time Complexity: O(n^2)
-Space Complexity : O(n)
+Time Complexity: 1. Adding_task_to_list() = O(n^2) , as there are n nodes to travserse and we use loop in main for n traversal. 2. selection_sort_tasks() = O(n^2), where n is number of nodes . 3. printing_task() = O(n) 4. free_list() = O(n)
+Space Complexity : O(n) , here n is number of nodes and each use O(1) space and O{1} for other temporary variables.
