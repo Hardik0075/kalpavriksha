@@ -13,7 +13,7 @@ order *create_node(int order_id, int delivery_time)
     order *new_node = (order *)malloc(sizeof(order));
     if (new_node == NULL)
     {
-        printf("Memory allocation failed....SOS");
+        printf("Memory allocation failed....");
         return NULL;
     }
     new_node->order_id = order_id;
@@ -39,7 +39,6 @@ void add_order(order **head, int order_id, int delivery_time)
     order *new_node = create_node(order_id, delivery_time);
     if (new_node == NULL)
     {
-        free_linked_list(head);
         return;
     }
     if (*head == NULL)
@@ -82,19 +81,31 @@ void bubble_sort_orders(order *head)
             if (current->delivery_time > current->next->delivery_time || (current->delivery_time == current->next->delivery_time && current->order_id > current->next->order_id))
             {
                 is_swapped = 1;
-                int temporaray_variable_to_store_time = current->delivery_time;
-                int temporaray_variable_to_store_order_id = current->order_id;
+                int temporaray_time = current->delivery_time;
+                int temporaray_order_id = current->order_id;
 
                 current->delivery_time = current->next->delivery_time;
                 current->order_id = current->next->order_id;
 
-                current->next->delivery_time = temporaray_variable_to_store_time;
-                current->next->order_id = temporaray_variable_to_store_order_id;
+                current->next->delivery_time = temporaray_time;
+                current->next->order_id = temporaray_order_id;
             }
             current = current->next;
         }
         prev = current;
     } while (is_swapped);
+}
+
+int is_valid_order_id(order *head, int order_id)
+{
+    while (head != NULL)
+    {
+        if (head->order_id == order_id)
+        {
+            return 1;
+        }
+        head = head->next;
+    }
 }
 
 int main()
@@ -106,13 +117,18 @@ int main()
     scanf("%d", &number_of_inputs);
     if (number_of_inputs <= 0)
     {
-        printf("Enter a valid number of orders. ");
+        printf("Invalid number of orders. ");
         return 0;
     }
     for (int iterator = 0; iterator < number_of_inputs; iterator++)
     {
-        printf("Enter orderID for order %d: ", iterator + 1);
+        printf("Enter order id for order %d: ", iterator + 1);
         scanf("%d", &order_id);
+        while (is_valid_order_id(head, order_id) || order_id < 0)
+        {
+            printf("Again , enter order id for order %d: ", iterator + 1);
+            scanf("%d", &order_id);
+        }
         printf("Enter Delivery Time for order %d (in hours): ", iterator + 1);
         scanf("%d", &delivery_time);
         if (delivery_time < 0)
