@@ -64,7 +64,6 @@ void insert_student_sorted(student **head, int student_id, char *name, int marks
     if (new_student == NULL)
     {
         printf("Memory Allocation Failed");
-        free_student_list(head);
         return;
     }
     if (*head == NULL || ((*head)->marks < marks) ||
@@ -95,6 +94,23 @@ void display_students(student *head)
     }
 }
 
+int is_valid(student *head, int student_id)
+{
+    if (student_id < 0)
+    {
+        return 1;
+    }
+    while (head != NULL)
+    {
+        if (head->student_id == student_id)
+        {
+            return 1;
+        }
+        head = head->next;
+    }
+    return 0;
+}
+
 int main()
 {
     int number_of_students;
@@ -118,9 +134,13 @@ int main()
 
         printf("Student ID: ");
         scanf("%d", &student_id);
-
+        while (is_valid(head, student_id))
+        {
+            printf("Enter again , student ID: ");
+            scanf("%d", &student_id);
+        }
         printf("Name: ");
-        scanf(" %[^\n]", name);
+        scanf(" %49[^\n]", name);
 
         printf("Marks (0-100): ");
         scanf("%d", &marks);
