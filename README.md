@@ -43,6 +43,20 @@ Constraints:
 0 ≤ deadline ≤ 100 (task's deadline).
 0 ≤ priority ≤ 10 (task's priority).
 1 ≤ duration ≤ 100 (task's duration).
+Example :
+Input :
+5
+101 10 3 5
+102 5 2 2
+103 5 3 4
+104 10 2 3
+105 5 3 1
+Output :
+Task ID: 105, Deadline: 5, Priority: 3, Duration: 1
+Task ID: 103, Deadline: 5, Priority: 3, Duration: 4
+Task ID: 102, Deadline: 5, Priority: 2, Duration: 2
+Task ID: 101, Deadline: 10, Priority: 3, Duration: 5
+Task ID: 104, Deadline: 10, Priority: 2, Duration: 3
 
 Time Complexity: 1. Adding_task_to_list() = O(n^2) , as there are n nodes to travserse and we use loop in main for n traversal. 2. selection_sort_tasks() = O(n^2), where n is number of nodes . 3. printing_task() = O(n) 4. free_list() = O(n) 5. Overall : O(n^2)
 Space Complexity : O(n) , here n is number of nodes and each use O(1) space and O{1} for other temporary variables.
