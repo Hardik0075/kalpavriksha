@@ -61,15 +61,9 @@ void swap_tasks(task *task_first, task *task_second)
 
 int compare_tasks(task *task_first, task *task_second)
 {
-    if (task_first->deadline < task_second->deadline)
-        return 1;
-    if (task_first->deadline > task_second->deadline)
-        return 0;
-    if (task_first->priority > task_second->priority)
-        return 1;
-    if (task_first->priority < task_second->priority)
-        return 0;
-    return task_first->duration < task_second->duration;
+    return (task_first->deadline < task_second->deadline) ||
+           (task_first->deadline == task_second->deadline && task_first->priority > task_second->priority) ||
+           (task_first->deadline == task_second->deadline && task_first->priority == task_second->priority && task_first->duration < task_second->duration);
 }
 
 void selection_sort_tasks(task *head)
@@ -105,7 +99,6 @@ void add_task_to_list(task **head, int task_id, int deadline, int priority, int 
     task *new_task = create_task(task_id, deadline, priority, duration);
     if (new_task == NULL)
     {
-        free_task_list(head);
         return;
     }
     if (*head == NULL)
