@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -34,13 +35,14 @@ int compare_string(char *string1, char *string2)
 
 void free_list(item *inventory)
 {
-    item *temporary_node;
+    item *temporary_node = NULL;
     while (inventory != NULL)
     {
         temporary_node = inventory;
         inventory = inventory->next;
         free(temporary_node);
     }
+    inventory = NULL;
 }
 
 item *create_node(int item_id, char item_name[])
@@ -62,7 +64,6 @@ void add_to_list(item **head, int item_id, char item_name[])
     item *new_node = create_node(item_id, item_name);
     if (new_node == NULL)
     {
-        free_list(*head);
         return;
     }
     if (*head == NULL)
@@ -98,19 +99,28 @@ int main()
 {
     item *inventory = NULL;
     int number_of_items;
-
     printf("Enter the number of items in the inventory: ");
     scanf("%d", &number_of_items);
-
+    while (number_of_items <= 0)
+    {
+        printf("Please enter a valid number of items in the inventory: ");
+        scanf("%d", &number_of_items);
+    }
     for (int index = 0; index < number_of_items; index++)
     {
         int item_id;
         char item_name[50];
 
-        printf("Enter Item ID and Item Name (comma separated): ");
+        printf("Enter Item ID : ");
         scanf("%d", &item_id);
+        while (item_id < 0)
+        {
+            printf("Please enter valid item ID : ");
+            scanf("%d", &item_id);
+        }
         getchar();
-        scanf("%[^\n]%*c", item_name);
+        printf("Enter Item Name : ");
+        scanf("%49[^\n]%*c", item_name);
         add_to_list(&inventory, item_id, item_name);
     }
 
