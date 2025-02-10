@@ -1,8 +1,10 @@
 #include <stdio.h>
 
+#define MAX_SIZE 100
+
 void store_value_from_queue2_to_queue1(int queue1[], int queue2[], int size)
 {
-    for (int i = 0; i <= size; i++)
+    for (int i = 0; i < size; i++)
     {
         queue1[i] = queue2[i];
     }
@@ -18,6 +20,12 @@ void transfer_elements_from_queue1_to_queue2(int queue1[], int *front_of_queue1,
 
 void push_to_stack(int queue1[], int queue2[], int *front_of_queue1, int *rear_of_queue1, int *front_of_queue2, int *rear_of_queue2, int value_to_insert)
 {
+    if (*rear_of_queue1 == MAX_SIZE - 1)
+    {
+        printf("Stack Overflow\n");
+        return;
+    }
+
     if (*front_of_queue2 == -1 && *rear_of_queue2 == -1)
     {
         *front_of_queue2 = 0;
@@ -28,8 +36,10 @@ void push_to_stack(int queue1[], int queue2[], int *front_of_queue1, int *rear_o
     {
         queue2[++(*rear_of_queue2)] = value_to_insert;
     }
+
     transfer_elements_from_queue1_to_queue2(queue1, front_of_queue1, rear_of_queue1, queue2, rear_of_queue2);
-    store_value_from_queue2_to_queue1(queue1, queue2, *rear_of_queue2);
+    store_value_from_queue2_to_queue1(queue1, queue2, *rear_of_queue2 + 1);
+
     *front_of_queue1 = 0;
     *rear_of_queue1 = *rear_of_queue2;
     *front_of_queue2 = -1;
@@ -43,14 +53,15 @@ void pop_from_stack(int queue1[], int *front_of_queue1, int *rear_of_queue1)
         printf("Stack Underflow\n");
         return;
     }
-    int poppedValue = queue1[*front_of_queue1];
+
+    printf("Popped element: %d\n", queue1[*front_of_queue1]);
     (*front_of_queue1)++;
+
     if (*front_of_queue1 > *rear_of_queue1)
     {
         *front_of_queue1 = -1;
         *rear_of_queue1 = -1;
     }
-    printf("Popped element: %d\n", poppedValue);
 }
 
 void peek_of_stack(int queue[], int front)
@@ -65,29 +76,17 @@ void peek_of_stack(int queue[], int front)
 
 void is_stack_empty(int front)
 {
-    if (front == -1)
-    {
-        printf("Stack is empty\n");
-    }
-    else
-    {
-        printf("Stack is not empty\n");
-    }
+    printf("Stack is %s\n", front == -1 ? "empty" : "not empty");
 }
 
 void size_of_stack(int front, int rear)
 {
-    if (front == -1)
-    {
-        printf("Stack size is 0\n");
-        return;
-    }
-    printf("Stack size is %d\n", rear - front + 1);
+    printf("Stack size is %d\n", front == -1 ? 0 : rear - front + 1);
 }
 
 int main()
 {
-    int queue1[100], queue2[100];
+    int queue1[MAX_SIZE], queue2[MAX_SIZE];
     int front_of_queue1 = -1, rear_of_queue1 = -1;
     int front_of_queue2 = -1, rear_of_queue2 = -1;
 
@@ -99,7 +98,9 @@ int main()
         int user_choice;
         scanf("%d", &user_choice);
 
-        if (user_choice == 1)
+        switch (user_choice)
+        {
+        case 1:
         {
             printf("Enter value to push: ");
             int value_to_insert;
@@ -113,28 +114,25 @@ int main()
             {
                 push_to_stack(queue1, queue2, &front_of_queue1, &rear_of_queue1, &front_of_queue2, &rear_of_queue2, value_to_insert);
             }
+            break;
         }
-        else if (user_choice == 2)
-        {
+        case 2:
             pop_from_stack(queue1, &front_of_queue1, &rear_of_queue1);
-        }
-        else if (user_choice == 3)
-        {
+            break;
+        case 3:
             peek_of_stack(queue1, front_of_queue1);
-        }
-        else if (user_choice == 4)
-        {
+            break;
+        case 4:
             is_stack_empty(front_of_queue1);
-        }
-        else if (user_choice == 5)
-        {
+            break;
+        case 5:
             size_of_stack(front_of_queue1, rear_of_queue1);
-        }
-        else
-        {
+            break;
+        case 6:
+            return 0;
+        default:
+            printf("Invalid choice! Please enter a valid option.\n");
             break;
         }
     }
-
-    return 0;
 }
