@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-void push(int queue[], int *front, int *rear, int value_to_insert, int size)
+void enqueue(int queue[], int *front, int *rear, int value, int size)
 {
     if ((*rear + 1) % size == *front)
     {
@@ -17,7 +17,8 @@ void push(int queue[], int *front, int *rear, int value_to_insert, int size)
         *rear = (*rear + 1) % size;
     }
 
-    queue[*rear] = value_to_insert;
+    queue[*rear] = value;
+
     int count = (*rear - *front + size) % size;
     for (int index = 0; index < count; index++)
     {
@@ -28,7 +29,7 @@ void push(int queue[], int *front, int *rear, int value_to_insert, int size)
     }
 }
 
-void pop(int queue[], int *front, int *rear, int size)
+void dequeue(int queue[], int *front, int *rear, int size)
 {
     if (*front == -1)
     {
@@ -84,8 +85,15 @@ void stack_size(int front, int rear, int size)
 int main()
 {
     int size_of_stack;
-    printf("Enter stack size: ");
-    scanf("%d", &size_of_stack);
+    do
+    {
+        printf("Enter stack size (must be positive): ");
+        scanf("%d", &size_of_stack);
+        if (size_of_stack <= 0)
+        {
+            printf("Invalid input! Please enter a positive number.\n");
+        }
+    } while (size_of_stack <= 0);
 
     int queue[size_of_stack];
     int front = -1, rear = -1;
@@ -93,7 +101,7 @@ int main()
     while (1)
     {
         printf("\nChoose an operation:\n");
-        printf("1. Push\n2. Pop\n3. Peek\n4. Is Empty\n5. Size\n6. Exit\n");
+        printf("1. Enqueue (Push)\n2. Dequeue (Pop)\n3. Peek\n4. Is Empty\n5. Size\n6. Exit\n");
         printf("Enter choice: ");
         int choice;
         scanf("%d", &choice);
@@ -103,11 +111,11 @@ int main()
             printf("Enter value to push: ");
             int value;
             scanf("%d", &value);
-            push(queue, &front, &rear, value, size_of_stack);
+            enqueue(queue, &front, &rear, value, size_of_stack);
         }
         else if (choice == 2)
         {
-            pop(queue, &front, &rear, size_of_stack);
+            dequeue(queue, &front, &rear, size_of_stack);
         }
         else if (choice == 3)
         {
@@ -121,9 +129,14 @@ int main()
         {
             stack_size(front, rear, size_of_stack);
         }
+        else if (choice == 6)
+        {
+            printf("Exiting...\n");
+            break;
+        }
         else
         {
-            break;
+            printf("Invalid choice! Please enter a number between 1 and 6.\n");
         }
     }
 
