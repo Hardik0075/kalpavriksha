@@ -20,6 +20,18 @@ weapon *create_weapon_node(int power_value)
     return new_node;
 }
 
+weapon *previous_node(weapon *head, weapon *node)
+{
+    if (head == node)
+        return NULL;
+    weapon *temporary_node = head;
+    while (temporary_node != NULL && temporary_node->next != node)
+    {
+        temporary_node = temporary_node->next;
+    }
+    return temporary_node;
+}
+
 void add_weapon_to_list(weapon **head, int power_value)
 {
     weapon *new_node = create_weapon_node(power_value);
@@ -32,31 +44,53 @@ void add_weapon_to_list(weapon **head, int power_value)
     }
     else
     {
-        weapon *temp = *head;
-        while (temp->next != NULL)
+        weapon *temporary_node = *head;
+        while (temporary_node->next != NULL)
         {
-            temp = temp->next;
+            temporary_node = temporary_node->next;
         }
-        temp->next = new_node;
+        temporary_node->next = new_node;
     }
+}
+
+int is_before(weapon *head, weapon *node1, weapon *node2)
+{
+    if (node1 == node2)
+        return 0;
+    weapon *temporary_node = head;
+    while (temporary_node != NULL)
+    {
+        if (temporary_node == node1)
+            return 1;
+        if (temporary_node == node2)
+            return 0;
+        temporary_node = temporary_node->next;
+    }
+    return 0;
 }
 
 void find_weapon_pair_with_target_power(weapon *head, int target_power)
 {
+    if (head == NULL)
+        return;
     weapon *left_weapon = head;
     weapon *right_weapon = head;
     while (right_weapon->next != NULL)
     {
         right_weapon = right_weapon->next;
     }
-    while (left_weapon != right_weapon)
+
+    int found = 0;
+    while (is_before(head, left_weapon, right_weapon))
     {
         int sum = left_weapon->power_value + right_weapon->power_value;
 
         if (sum == target_power)
         {
-            printf("Weapon pair found! Indices: %d and %d\n", left_weapon->power_value, right_weapon->power_value);
-            return;
+            printf("Weapon pair found! Powers: %d and %d\n", left_weapon->power_value, right_weapon->power_value);
+            found = 1;
+            left_weapon = left_weapon->next;
+            right_weapon = previous_node(head, right_weapon);
         }
         else if (sum < target_power)
         {
@@ -64,15 +98,12 @@ void find_weapon_pair_with_target_power(weapon *head, int target_power)
         }
         else
         {
-            weapon *temporary_node = head;
-            while (temporary_node->next != right_weapon)
-            {
-                temporary_node = temporary_node->next;
-            }
-            right_weapon = temporary_node;
+            right_weapon = previous_node(head, right_weapon);
         }
     }
-    printf("No valid weapon pair found.\n");
+
+    if (!found)
+        printf("No valid weapon pair found.\n");
 }
 
 void free_weapon_list(weapon *head)
@@ -84,6 +115,7 @@ void free_weapon_list(weapon *head)
         head = head->next;
         free(temporary_node);
     }
+    head = NULL;
 }
 
 int main()
