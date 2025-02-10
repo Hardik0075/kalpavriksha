@@ -150,6 +150,7 @@ void free_list(node *head)
         head = head->next;
         free(temporary_node);
     }
+    head = NULL;
 }
 
 int main()
@@ -183,7 +184,7 @@ int main()
         return 0;
     }
 
-    printf("Enter the elements of List 1: ");
+    printf("Enter the elements of List 2: ");
     for (int index = 0; index < number_of_elements_in_list2; index++)
     {
         int data;
