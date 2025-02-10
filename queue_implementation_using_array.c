@@ -54,7 +54,7 @@ void is_queue_empty(int front, int rear)
     printf("Queue is not empty\n");
 }
 
-void queue_size(int front, int rear)
+void size_queue(int front, int rear)
 {
     if (front == -1 || front > rear)
     {
@@ -80,7 +80,7 @@ int main()
         printf("Enter choice: ");
         int operation_user_want_to_apply;
         scanf("%d", &operation_user_want_to_apply);
-
+        
         if (operation_user_want_to_apply == 1)
         {
             int value_to_insert_in_queue;
@@ -102,7 +102,7 @@ int main()
         }
         else if (operation_user_want_to_apply == 5)
         {
-            queue_size(front, rear);
+            size_queue(front, rear);
         }
         else
         {
