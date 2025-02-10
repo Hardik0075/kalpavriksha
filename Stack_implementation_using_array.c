@@ -65,6 +65,11 @@ int main()
     int maximum_size_of_stack;
     printf("Enter maximum size of stack : ");
     scanf("%d", &maximum_size_of_stack);
+    while (maximum_size_of_stack <= 0)
+    {
+        printf("Please re-enter a non zero positive maximum size of stack : ");
+        scanf("%d", &maximum_size_of_stack);
+    }
     int stack[maximum_size_of_stack];
     int top = -1;
     while (1)
