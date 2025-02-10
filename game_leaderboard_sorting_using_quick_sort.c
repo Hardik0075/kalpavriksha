@@ -10,10 +10,18 @@ typedef struct player
     struct player *previous;
 } player;
 
+char to_lower_conversion(char character)
+{
+    if (character >= 'A' && character <= 'Z')
+    {
+        return character + ('a' - 'A');
+    }
+    return character;
+}
+
 char *copy_string(char *destination, char *source)
 {
     char *destination_pointer = destination;
-
     while (*source != '\0')
     {
         *destination_pointer = *source;
@@ -21,18 +29,23 @@ char *copy_string(char *destination, char *source)
         source++;
     }
     *destination_pointer = '\0';
-
     return destination;
 }
 
 int compare_string(char *string1, char *string2)
 {
     int index = 0;
-    while (string1[index] != '\0' && string1[index] == string2[index])
+    while (string1[index] != '\0' && string2[index] != '\0')
     {
+        char character1 = to_lower_conversion(string1[index]);
+        char character2 = to_lower_conversion(string2[index]);
+        if (character1 != character2)
+        {
+            return character1 - character2;
+        }
         index++;
     }
-    return string1[index] - string2[index];
+    return to_lower_conversion(string1[index]) - to_lower_conversion(string2[index]);
 }
 
 player *create_player(int id, char name[], int score)
@@ -60,6 +73,7 @@ void free_players(player *head)
         head = head->next;
         free(temporary_node);
     }
+    head = NULL;
 }
 
 void append_player(player **head, int id, char name[], int score)
@@ -112,7 +126,9 @@ player *partition(player *low, player *high)
 
     while (pivot_right != high)
     {
-        if (pivot_right->score > pivot_score || (pivot_right->score == pivot_score && compare_string(pivot_right->name, pivot_name) < 0))
+        // Using custom compare_string for case-insensitive name comparison.
+        if (pivot_right->score > pivot_score ||
+            (pivot_right->score == pivot_score && compare_string(pivot_right->name, pivot_name) < 0))
         {
             pivot_left = (pivot_left == NULL) ? low : pivot_left->next;
             swap_players(pivot_left, pivot_right);
@@ -155,7 +171,7 @@ void display_leaderboard(player *head)
     printf("Sorted Leaderboard:\n");
     while (head != NULL)
     {
-        printf("player ID: %d, Name: %s, Score: %d\n", head->player_id, head->name, head->score);
+        printf("Player ID: %d, Name: %s, Score: %d\n", head->player_id, head->name, head->score);
         head = head->next;
     }
 }
@@ -163,7 +179,6 @@ void display_leaderboard(player *head)
 int main()
 {
     int number_of_players;
-
     printf("Enter number of players: ");
     scanf("%d", &number_of_players);
 
@@ -174,14 +189,18 @@ int main()
     }
 
     player *head = NULL;
-
     for (int index = 0; index < number_of_players; index++)
     {
         int player_id, player_score;
         char player_name[50];
-        printf("Enter details of player %d : \n", index + 1);
-        printf("player ID: ");
+        printf("Enter details of player %d:\n", index + 1);
+        printf("Player ID: ");
         scanf("%d", &player_id);
+        while (player_id < 0)
+        {
+            printf("Please enter a valid player id: ");
+            scanf("%d", &player_id);
+        }
         printf("Name: ");
         scanf("%s", player_name);
         printf("Score: ");
@@ -190,9 +209,7 @@ int main()
     }
 
     player *tail = get_tail(head);
-
     quick_sort(head, tail);
-
     display_leaderboard(head);
     free_players(head);
     return 0;
